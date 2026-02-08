@@ -59,7 +59,7 @@ public class Product {
 	    private LocalDateTime createdAt;
 
 //	    @ElementCollection
-	    private String Sizes;
+	    private Set<String> Sizes;
 
 	    @OneToMany(mappedBy = "product",cascade=CascadeType.ALL,orphanRemoval = true)
 	    private List<Review> reviews = new ArrayList<>();

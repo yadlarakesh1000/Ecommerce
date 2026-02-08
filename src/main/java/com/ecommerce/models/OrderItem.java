@@ -1,5 +1,4 @@
 package com.ecommerce.models;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
@@ -19,28 +18,29 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class CartItem {
+public class OrderItem {
+       
+	  @Id
+	    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	    private Long id;
+    
+	  @JsonIgnore
+		@ManyToOne
+		private Orders orders;
+		
+		@ManyToOne
+		private Product product;
+		
+		private String size;
+		
+		private int quantity;
+		
+		private Integer mrpPrice;
+		
+		private Integer sellingPrice;
+		
+		private Long userId;
+		
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-	
-	@ManyToOne
-	@JsonIgnore
-    private Cart cart;
-	
-	@ManyToOne
-	private Product product;
-	
-	private String size;
-	
-	private int quantity=1;
-	
-	private Integer mrpPrice;
-	
-	private Integer sellingPrice;
-	
-	private Long userId;
-	
-	
+		
 }

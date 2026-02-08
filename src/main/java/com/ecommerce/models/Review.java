@@ -11,7 +11,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -24,12 +28,17 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
+@Table(
+		  uniqueConstraints = {
+		    @UniqueConstraint(columnNames = {"user_id", "product_id"})
+		  }
+		)
 public class Review {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-	
+	@Size(min = 1, max = 5)
 	@Column(nullable = false)
 	private double rating;
 	
@@ -38,11 +47,11 @@ public class Review {
 	
 	@JsonIgnore
 	@ManyToOne
-	@Column(name ="product_id",nullable=false)
+	@JoinColumn(name ="product_id",nullable=false)
 	private Product product;
 	
 	@ManyToOne
-	@Column(name="user_id",nullable = false)
+	@JoinColumn(name="user_id",nullable = false)
 	private User user;
 	
 	@Column(nullable = false)

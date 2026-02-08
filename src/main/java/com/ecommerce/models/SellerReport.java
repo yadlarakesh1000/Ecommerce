@@ -4,34 +4,38 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
-public class Address {
+@Data
+public class SellerReport {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	private Long id;
 	
-	private String name;
+	@OneToOne
+	private Seller seller;
 	
-	private String locality;
+	private Long totalEarnings;
 	
-	private String address;
+	private Long totalSales;
 	
-	private String city;
+	private Long totalRefunds;
 	
-	private String State;
+	private Long totalTax;
 	
-	private String pincode;
+	private Long netEarnings;
 	
-	private String  mobile;
+	private Integer cancelledOrders;
+	
+	private Integer totalTransactions;
+	
+	
+	
 }

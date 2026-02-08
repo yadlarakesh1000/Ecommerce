@@ -1,11 +1,14 @@
 package com.ecommerce.models;
 
+import java.util.Set;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,23 +18,17 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
-public class Address {
+public class WishList {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	private Long id;
 	
-	private String name;
+	@OneToOne
+	private User user;
+	 
+	@ManyToMany
+	private Set<Product> products;
 	
-	private String locality;
-	
-	private String address;
-	
-	private String city;
-	
-	private String State;
-	
-	private String pincode;
-	
-	private String  mobile;
+
 }

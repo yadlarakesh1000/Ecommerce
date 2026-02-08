@@ -4,8 +4,6 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.ecommerce.domain.UserRole;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -39,6 +37,7 @@ public class Coupon {
 	private double minimumOrderValue;
 	
 	private boolean isActive=true;
+
 	
 	@ManyToMany(mappedBy = "usedCoupons")
 	private Set<User> usedByUsers = new HashSet<>();

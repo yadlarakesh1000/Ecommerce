@@ -1,11 +1,14 @@
 package com.ecommerce.models;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,25 +16,24 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
-public class Address {
+@AllArgsConstructor
+public class Transaction {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+   private Long id;
 	
-	private String name;
+	@ManyToOne
+	private User customer;
 	
-	private String locality;
+	@OneToOne
+	private Orders orders;
 	
-	private String address;
+	@ManyToOne
+	private Seller seller;
 	
-	private String city;
 	
-	private String State;
+	private LocalDateTime transactionDate = LocalDateTime.now();
 	
-	private String pincode;
-	
-	private String  mobile;
 }
+
