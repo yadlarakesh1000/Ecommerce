@@ -32,7 +32,7 @@ public class OrderItem {
 		private Product product;
 		
 		private String size;
-		
+	
 		private int quantity;
 		
 		private Integer mrpPrice;
