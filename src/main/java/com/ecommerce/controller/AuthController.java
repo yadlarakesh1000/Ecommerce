@@ -21,7 +21,7 @@ public class AuthController {
      private final AuthService authservice;
 
 	@PostMapping("/signup")
-	public ResponseEntity<AuthResponse> createUserHandler(@RequestBody SignUpRequest req){
+	public ResponseEntity<AuthResponse> createUserHandler(@RequestBody SignUpRequest req) throws Exception{
 		 String jwt = authservice.createUser(req);
 		 AuthResponse res =  new AuthResponse();
 		 res.setJwt(jwt);
@@ -30,8 +30,5 @@ public class AuthController {
 		
 		return ResponseEntity.ok(res);
 	}
-	@GetMapping("/ping")
-	public String ping() {
-		return "pong";
-	}
+
 }

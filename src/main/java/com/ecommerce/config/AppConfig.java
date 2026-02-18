@@ -15,10 +15,13 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class AppConfig {
+	private final JwtTokenValidator jwttokenvalidator;
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -28,7 +31,7 @@ public class AppConfig {
 								.requestMatchers("/api/signup").permitAll().requestMatchers("/api/**").authenticated()
 
 								.anyRequest().permitAll())
-				.addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class).csrf(csrf -> csrf.disable())
+				.addFilterBefore(jwttokenvalidator, BasicAuthenticationFilter.class).csrf(csrf -> csrf.disable())
 				.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
 		return http.build();
