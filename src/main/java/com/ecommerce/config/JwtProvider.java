@@ -34,14 +34,18 @@ public class JwtProvider {
 		return jwt;
 		
 	}
+	//extract claims 
+	public Claims extractClaims(String jwt) {
+	    return Jwts.parserBuilder()
+	            .setSigningKey(key)
+	            .build()
+	            .parseClaimsJws(jwt)
+	            .getBody();
+	}
 	
-	public String getEmailFromJwtToken(String jwt) {
-		jwt=jwt.substring(7);
+	public String getEmailFromJwtToken(Claims claims) {
 		
-		Claims claims=Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
-		String email=String.valueOf(claims.get("email"));
-		
-		return email;
+		return claims.get("email",String.class);
 	}
 	
 	public String populateAuthorities(Collection<? extends GrantedAuthority> collection) {

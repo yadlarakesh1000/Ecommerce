@@ -23,26 +23,28 @@ import jakarta.servlet.ServletException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 @Component
+@RequiredArgsConstructor
 public class JwtTokenValidator extends OncePerRequestFilter {
-
+private final JwtProvider jwtprovider;
 	
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		String jwt = request.getHeader(JwtConstant.JWT_HEADER);
+		System.out.println(jwtprovider);
 		
-		if(jwt!=null) {
+		if(jwt!=null && jwt.startsWith("Bearer ")) {
 			jwt=jwt.substring(7);
 			
 			
 			try {
 				
-				SecretKey key= Keys.hmacShaKeyFor(JwtConstant.SECRET_KEY.getBytes());
 				
-				Claims claims=Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
-				
-				String email=String.valueOf(claims.get("email"));
+				Claims claims= jwtprovider.extractClaims(jwt);
+				String email = jwtprovider.getEmailFromJwtToken(claims);
+
 				
 				String authorities=String.valueOf(claims.get("authorities"));
 				
@@ -54,9 +56,11 @@ public class JwtTokenValidator extends OncePerRequestFilter {
 				SecurityContextHolder.getContext().setAuthentication(authentication);
 				
 			} catch (Exception e) {
+				   System.out.println(e.getMessage());
 				throw new BadCredentialsException("invalid token...");
 			}
 		}
+		
 		filterChain.doFilter(request, response);
 		
 	}

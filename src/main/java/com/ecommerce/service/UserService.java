@@ -5,4 +5,5 @@ import com.ecommerce.models.User;
 public interface UserService {
 
 	public User findUserByEmail(String email) throws Exception;
+	public User findUserByJwt(String jwt) throws Exception;
 }

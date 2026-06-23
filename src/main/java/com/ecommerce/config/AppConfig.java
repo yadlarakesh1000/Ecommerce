@@ -28,7 +28,13 @@ public class AppConfig {
 		http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(
 						Authorize -> Authorize.requestMatchers("/api/admin/**").hasAnyRole("SHOP_OWNER", "ADMIN")
-								.requestMatchers("/api/signup").permitAll().requestMatchers("/api/**").authenticated()
+								.requestMatchers("/api/signup").permitAll()
+								.requestMatchers("/api/signin-otp").permitAll()
+								.requestMatchers("/api/signin").permitAll()
+								.requestMatchers("/api/**").authenticated()
+								.requestMatchers("/seller/**").permitAll()
+								
+								
 
 								.anyRequest().permitAll())
 				.addFilterBefore(jwttokenvalidator, BasicAuthenticationFilter.class).csrf(csrf -> csrf.disable())

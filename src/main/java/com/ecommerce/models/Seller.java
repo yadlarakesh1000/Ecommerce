@@ -12,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -44,6 +45,7 @@ public class Seller {
 	    private BankDetails bankDetails = new BankDetails();
 
 	    @OneToOne(cascade = jakarta.persistence.CascadeType.ALL)
+	    @NotNull
 	    private Address pickupAddress=new Address();
 
 	    private String GSTIN;

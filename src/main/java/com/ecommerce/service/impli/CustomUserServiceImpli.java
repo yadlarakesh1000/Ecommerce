@@ -17,7 +17,7 @@ import com.ecommerce.repository.SellerRepository;
 import com.ecommerce.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
-
+//Spring needs a constructor to inject dependencies.Because  this class depends on:UserRepository,SellerRepository to solve ths we use required constructor args
 @RequiredArgsConstructor
 @Service
 public class CustomUserServiceImpli implements UserDetailsService {
@@ -25,31 +25,31 @@ public class CustomUserServiceImpli implements UserDetailsService {
       private final SellerRepository sellerRepository;
       private static final String SELLER_PREFIX ="seller_";
       
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-         
-		if(username.startsWith(SELLER_PREFIX)) {
-			 String actualUsername =username.substring(SELLER_PREFIX.length());
-		     Seller seller = sellerRepository.findByEmail(actualUsername);
-		     
-		     if(seller!=null) {
-		    	 return buildUserDetails(seller.getEmail(),
-		    			 seller.getPassword(),
-		    			 seller.getRole());
-		     }
-		}
-		else {
-			 
-			
-			User user = userRepository.findByEmail(username);
-		    if(user!=null) {
-		    	return buildUserDetails(user.getEmail(),user.getPassword(),user.getRole());
-		    }
-		}
-		
-		throw new UsernameNotFoundException("user or seller not found with this email"+ username);
-		
-	}
+      @Override
+  	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+           
+  		if(username.startsWith(SELLER_PREFIX)) {
+  			 String actualUsername =username.substring(SELLER_PREFIX.length());
+  		     Seller seller = sellerRepository.findByEmail(actualUsername);
+  		     
+  		     if(seller!=null) {
+  		    	 return buildUserDetails(seller.getEmail(),
+  		    			 seller.getPassword(),
+  		    			 seller.getRole());
+  		     }
+  		}
+  		else {
+  			 
+  			
+  			User user = userRepository.findByEmail(username);
+  		    if(user!=null) {
+  		    	return buildUserDetails(user.getEmail(),user.getPassword(),user.getRole());
+  		    }
+  		}
+  		
+  		throw new UsernameNotFoundException("user or seller not found with this email"+ username);
+  		
+  	}
 
 	private UserDetails buildUserDetails(String email, String password, UserRole role) {
 		if (role == null) role = UserRole.ROLE_CUSTOMER;
@@ -59,6 +59,9 @@ public class CustomUserServiceImpli implements UserDetailsService {
 
 		return new org.springframework.security.core.userdetails.User(email, password, authorities);
 	}
+
+
+
 	
 	
           

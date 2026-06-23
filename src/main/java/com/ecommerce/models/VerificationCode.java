@@ -1,5 +1,7 @@
 package com.ecommerce.models;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,4 +31,6 @@ public class VerificationCode {
 	private User user;
 	@OneToOne
 	private Seller seller;
+	private LocalDateTime expiryTime;
+	private int attemptCount;
 }
