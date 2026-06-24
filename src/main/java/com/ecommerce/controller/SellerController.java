@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ecommerce.Exception.SellerException;
 import com.ecommerce.config.JwtProvider;
 import com.ecommerce.domain.AccountStatus;
 import com.ecommerce.domain.UserRole;
@@ -56,8 +57,8 @@ public class SellerController {
 	private final VerificationService verificationService;
 
  
-	   @PostMapping("/sent/login-top")
-	    public ResponseEntity<ApiResponse> sentLoginOtp(@RequestBody VerificationCode req) throws MessagingException, Exception {
+	   @PostMapping("/sent/login-otp")
+	    public ResponseEntity<ApiResponse> sentLoginOtp(@RequestBody VerificationCode req) throws MessagingException, SellerException {
 	        Seller seller = sellerService.getSellerByEmail(req.getEmail());
 	        String otp = OtpUtil.generateOtp();
 	        VerificationCode verificationCode = verificationService.createVerificationCode(otp, req.getEmail());
@@ -71,28 +72,28 @@ public class SellerController {
 	        return new ResponseEntity<>(res, HttpStatus.CREATED);
 	    }
 	   @PostMapping("/verify/login-otp")
-	   public ResponseEntity<AuthResponse> verifyLoginotp(@RequestBody VerificationCode req)throws MessagingException, Exception{
+	   public ResponseEntity<AuthResponse> verifyLoginotp(@RequestBody VerificationCode req)throws MessagingException, SellerException{
 			String email = req.getEmail();
 			String otp =req.getOtp();
 			
 			VerificationCode verificationCode = verificationCodeRepository.findByEmail(email);
 			if(verificationCode==null ) {
-				throw new Exception ("Wrong OTP...");
+				throw new SellerException ("Wrong OTP...");
 			}
 			// check Expiration
 			if(verificationCode.getExpiryTime().isBefore(LocalDateTime.now())) {
 				verificationCodeRepository.deleteByEmail(email);
-				throw new Exception("OTP Expired");
+				throw new SellerException("OTP Expired");
 			}
 			//checks attempts count
 			if (verificationCode.getAttemptCount()>=5) {
-				throw new Exception ("Too many OTP attempts");
+				throw new SellerException ("Too many OTP attempts");
 			}
 			// check OTP verification
 			if(!verificationCode.getOtp().equals(otp)) {
 				verificationCode.setAttemptCount(verificationCode.getAttemptCount()+1);
 				verificationCodeRepository.save(verificationCode);
-				throw new Exception("Invalid OTP");
+				throw new SellerException("Invalid OTP");
 			}
 				 Authentication authentication = authenticate(req.getEmail());
 			        SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -142,7 +143,7 @@ public class SellerController {
 
 
 	    @PostMapping
-	    public ResponseEntity<Seller> createSeller(@RequestBody Seller seller) throws Exception, MessagingException {
+	    public ResponseEntity<Seller> createSeller(@RequestBody Seller seller) throws SellerException, MessagingException {
 	        Seller savedSeller = sellerService.createSeller(seller);
 
 	        String otp = OtpUtil.generateOtp();
@@ -156,7 +157,7 @@ public class SellerController {
 	    }
 
 	    @GetMapping("/{id}")
-	    public ResponseEntity<Seller> getSellerById(@PathVariable Long id) throws Exception {
+	    public ResponseEntity<Seller> getSellerById(@PathVariable Long id) throws SellerException {
 	        Seller seller = sellerService.getSellerById(id);
 	        return new ResponseEntity<>(seller, HttpStatus.OK);
 	    }
@@ -164,9 +165,7 @@ public class SellerController {
 	    @GetMapping("/profile")
 	    public ResponseEntity<Seller> getSellerByJwt(
 	            @RequestHeader("Authorization") String jwt) throws Exception {
-	       Claims claims = jwtProvider.extractClaims(jwt);
-	       String email=jwtProvider.getEmailFromJwtToken(claims);
-	        Seller seller = sellerService.getSellerByEmail(email);
+	        Seller seller = sellerService.getSellerProfile(jwt);
 	        return new ResponseEntity<>(seller, HttpStatus.OK);
 	    }
 
@@ -194,7 +193,7 @@ public class SellerController {
 
 	    @PatchMapping()
 	    public ResponseEntity<Seller> updateSeller(
-	            @RequestHeader("Authorization") String jwt, @RequestBody Seller seller) throws Exception {
+	            @RequestHeader("Authorization") String jwt, @RequestBody Seller seller) throws SellerException {
 
 	        Seller profile = sellerService.getSellerProfile(jwt);
 	        Seller updatedSeller = sellerService.updateSeller(profile.getId(), seller);
@@ -203,7 +202,7 @@ public class SellerController {
 	    }
 
 	    @DeleteMapping("/{id}")
-	    public ResponseEntity<Void> deleteSeller(@PathVariable Long id) throws Exception {
+	    public ResponseEntity<Void> deleteSeller(@PathVariable Long id) throws SellerException {
 
 	        sellerService.deleteSeller(id);
 	        return ResponseEntity.noContent().build();

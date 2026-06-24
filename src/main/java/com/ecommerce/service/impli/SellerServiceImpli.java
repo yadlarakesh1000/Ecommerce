@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.ecommerce.Exception.SellerException;
 import com.ecommerce.config.JwtProvider;
 import com.ecommerce.domain.AccountStatus;
 import com.ecommerce.domain.UserRole;
@@ -32,7 +33,7 @@ public class SellerServiceImpli implements SellerService {
 
 
 	@Override
-	public Seller getSellerProfile(String jwt) throws Exception {
+	public Seller getSellerProfile(String jwt) throws SellerException {
 		 if(jwt.startsWith("Bearer ")) {
 			 jwt=jwt.substring(7);
 		 }
@@ -43,10 +44,10 @@ public class SellerServiceImpli implements SellerService {
 	}
 
 	@Override
-	public Seller createSeller(Seller seller) throws Exception {
+	public Seller createSeller(Seller seller) throws SellerException {
 		     Seller isExist= sellerRepository.findByEmail(seller.getEmail());
 		     if(isExist!=null) {
-		    	 throw new Exception("Seller already Exist with this Email");
+		    	 throw new SellerException("Seller already Exist with this Email");
 		     }
 		     Address savedAddress = addressRepository.save(seller.getPickupAddress());
 		     Seller newSeller = new Seller();
@@ -65,16 +66,16 @@ public class SellerServiceImpli implements SellerService {
 	}
 
 	@Override
-	public Seller getSellerById(Long id) throws Exception {
+	public Seller getSellerById(Long id) throws SellerException {
 		
-		return sellerRepository.findById(id).orElseThrow(()->new Exception("Seller not found with the id"));
+		return sellerRepository.findById(id).orElseThrow(()->new SellerException("Seller not found with the id"));
 	}
 
 	@Override
-	public Seller getSellerByEmail(String email) throws Exception {
+	public Seller getSellerByEmail(String email) throws SellerException {
 		      Seller seller = sellerRepository.findByEmail(email);
 		      if(seller==null) {
-		    	  throw new Exception("Seller not found with this Email"+email);
+		    	  throw new SellerException("Seller not found with this Email"+email);
 		      }
 		return seller;
 	}
@@ -86,7 +87,7 @@ public class SellerServiceImpli implements SellerService {
 	}
 
 	@Override
-	public Seller updateSeller(Long id, Seller seller) throws Exception {
+	public Seller updateSeller(Long id, Seller seller) throws SellerException {
 		     Seller isExistSeller = this.getSellerById(id);
 		     if(seller.getSellerName()!=null) {
 		    	 isExistSeller.setSellerName(seller.getSellerName());
@@ -128,12 +129,12 @@ public class SellerServiceImpli implements SellerService {
 	}
 
 	@Override
-	public void deleteSeller(Long id) throws Exception {
+	public void deleteSeller(Long id) throws SellerException {
 		     if(sellerRepository.existsById(id)) {
 		    	 sellerRepository.deleteById(id);
 		     }
 		     else {
-		    	 throw new Exception("seller not found with this id"+ id);
+		    	 throw new SellerException("seller not found with this id"+ id);
 		     }
 		     
 		
@@ -143,7 +144,7 @@ public class SellerServiceImpli implements SellerService {
 	public Seller verifyEmail(
 	String email,
 	String otp
-	)throws Exception{
+	)throws SellerException{
 	Seller seller=
 	sellerRepository.findByEmail(email);
 
@@ -154,7 +155,7 @@ public class SellerServiceImpli implements SellerService {
 
 
 	if(code==null){
-	throw new Exception(
+	throw new SellerException(
 	"OTP not found"
 	);
 	}
@@ -162,7 +163,7 @@ public class SellerServiceImpli implements SellerService {
 
 	if(!code.getOtp().equals(otp)){
 
-	throw new Exception(
+	throw new SellerException(
 	"Invalid OTP"
 	);
 
@@ -180,7 +181,7 @@ public class SellerServiceImpli implements SellerService {
 	}
 
 	@Override
-	public Seller updateSellerAccountStatus(Long sellerId, AccountStatus status) throws Exception {
+	public Seller updateSellerAccountStatus(Long sellerId, AccountStatus status) throws SellerException {
 		                          Seller seller = this.getSellerById(sellerId);
 		                          seller.setAccountStatus(status);
 		return sellerRepository.save(seller);

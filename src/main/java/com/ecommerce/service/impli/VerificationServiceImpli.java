@@ -1,5 +1,7 @@
 package com.ecommerce.service.impli;
 
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Service;
 
 import com.ecommerce.models.VerificationCode;
@@ -27,7 +29,8 @@ public class VerificationServiceImpli implements VerificationService {
         VerificationCode verificationCode=new VerificationCode();
         verificationCode.setOtp(otp);
         verificationCode.setEmail(email);
-
+        verificationCode.setAttemptCount(0);
+        verificationCode.setExpiryTime(LocalDateTime.now().plusMinutes(5));
         return verificationCodeRepository.save(verificationCode);
 
     }
