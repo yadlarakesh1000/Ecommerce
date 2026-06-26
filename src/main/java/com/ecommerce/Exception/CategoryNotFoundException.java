@@ -1,7 +1,7 @@
-package com.ecommerce.controller;
+package com.ecommerce.Exception;
 
 public class CategoryNotFoundException extends RuntimeException{
-	CategoryNotFoundException(String categoryNotFound){
+	public CategoryNotFoundException(String categoryNotFound){
 		super(categoryNotFound);
 	}
 

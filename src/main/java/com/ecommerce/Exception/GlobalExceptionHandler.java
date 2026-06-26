@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
-import com.ecommerce.controller.CategoryNotFoundException;
+
 
 
 public class GlobalExceptionHandler {
@@ -15,6 +15,14 @@ public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(ProductException.class)
 	public ResponseEntity<ErrorDetails> ProductExceptionHandler(ProductException ue, WebRequest req){
+		
+		ErrorDetails err= new ErrorDetails(ue.getMessage(),req.getDescription(false),LocalDateTime.now());
+		
+		return new ResponseEntity<ErrorDetails>(err,HttpStatus.BAD_REQUEST);
+		
+	}
+	@ExceptionHandler(UserException.class)
+	public ResponseEntity<ErrorDetails>UserExceptionHandler(UserException ue, WebRequest req){
 		
 		ErrorDetails err= new ErrorDetails(ue.getMessage(),req.getDescription(false),LocalDateTime.now());
 		
@@ -39,6 +47,13 @@ public class GlobalExceptionHandler {
 
 		return new ResponseEntity<ErrorDetails>(err,HttpStatus.BAD_REQUEST);
 	}
+	@ExceptionHandler(CartItemException.class)
+	public ResponseEntity<ErrorDetails> handleCartItemException(CartItemException ex, WebRequest req) {
+		ErrorDetails err= new ErrorDetails(ex.getMessage(),
+				req.getDescription(false),
+				LocalDateTime.now());
 
+		return new ResponseEntity<ErrorDetails>(err,HttpStatus.BAD_REQUEST);
+	}
 	
 }

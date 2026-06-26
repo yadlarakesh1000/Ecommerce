@@ -2,6 +2,7 @@ package com.ecommerce.service.impli;
 
 import org.springframework.stereotype.Service;
 
+import com.ecommerce.Exception.UserException;
 import com.ecommerce.config.JwtProvider;
 import com.ecommerce.models.User;
 import com.ecommerce.repository.UserRepository;
@@ -17,16 +18,16 @@ public class UserServiceImpli implements UserService {
 	private final UserRepository userRepository;
 
 	@Override
-	public User findUserByEmail(String email) throws Exception {
+	public User findUserByEmail(String email) throws UserException {
 		User user = userRepository.findByEmail(email);
 		if(user==null) {
-			throw new Exception("User Not Found with the email:/t/t"+email);
+			throw new UserException("User Not Found with the email:/t/t"+email);
 		}
 		return user;
 	}
 
 	@Override
-	public User findUserByJwt(String jwt) throws Exception {
+	public User findUserByJwt(String jwt) throws UserException {
 		  if(jwt.startsWith("Bearer ")) {
 			  jwt= jwt.substring(7);   //we got doubt we already removed bearer substring in jwt validator then why do here? because we directly call from Jwt provider which will not remove 
 		  }
