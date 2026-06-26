@@ -27,7 +27,9 @@ public class EmailService {
     		  )
       
 	public void sendVerificationOtpEmail(String userEmail, String otp, String subject, String text) throws MessagingException {
-
+		System.out.println("\n========================================================");
+		System.out.println("  GENERATED OTP FOR [" + userEmail + "]: " + otp);
+		System.out.println("========================================================\n");
 		try {
 			MimeMessage mimeMessage =javaMailSender.createMimeMessage();
 			MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(
