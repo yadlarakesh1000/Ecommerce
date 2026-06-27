@@ -21,6 +21,14 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<ErrorDetails>(err,HttpStatus.BAD_REQUEST);
 		
 	}
+	@ExceptionHandler(OrderException.class)
+	public ResponseEntity<ErrorDetails>OrderExceptionHandler(OrderException ue, WebRequest req){
+		
+		ErrorDetails err= new ErrorDetails(ue.getMessage(),req.getDescription(false),LocalDateTime.now());
+		
+		return new ResponseEntity<ErrorDetails>(err,HttpStatus.BAD_REQUEST);
+		
+	}
 	@ExceptionHandler(UserException.class)
 	public ResponseEntity<ErrorDetails>UserExceptionHandler(UserException ue, WebRequest req){
 		

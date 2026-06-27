@@ -8,5 +8,5 @@ public enum PaymentOrderStatus {
 	SHIPPED,
 	DELIVERED,
 	CANCELLED,
-	RETURNED
+	RETURNED, SUCCESS,FAILED
 }

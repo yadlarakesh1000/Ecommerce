@@ -171,6 +171,7 @@ public class SellerServiceImpli implements SellerService {
 
 
 	seller.setEmailVerified(true);
+	seller.setAccountStatus(AccountStatus.ACTIVE);
 
 
 	verificationCodeRepository
